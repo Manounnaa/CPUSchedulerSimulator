@@ -2,11 +2,11 @@ public class Process {
     private String id;          // Process ID
     private int burstTime;      // Burst Time
     private int arrivalTime;    // Arrival Time
-    private Integer priority;   // Priority (optional) 3 ,4
+    private int priority;   // Priority
     private Integer quantum;    // Quantum (optional) 4
 
     // Constructor
-    public Process(String id, int burstTime, int arrivalTime, Integer priority, Integer quantum) {
+    public Process(String id, int burstTime, int arrivalTime, int priority, Integer quantum) {
         this.id = id;
         this.burstTime = burstTime;
         this.arrivalTime = arrivalTime;
@@ -39,11 +39,11 @@ public class Process {
         this.arrivalTime = arrivalTime;
     }
 
-    public Integer getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(Integer priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 
@@ -61,7 +61,7 @@ public class Process {
                 "id='" + id + '\'' +
                 ", burstTime=" + burstTime +
                 ", arrivalTime=" + arrivalTime +
-                ", priority=" + (priority != null ? priority : "N/A") +
+                ", priority=" + (priority ) +
                 ", quantum=" + (quantum != null ? quantum : "N/A") +
                 '}';
     }

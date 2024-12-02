@@ -12,10 +12,8 @@ public class InputHandler {
         int numProcesses = scanner.nextInt();
         scanner.nextLine();
 
-        StringBuilder prompt = new StringBuilder("Enter Process ID, Burst Time, Arrival Time");
-        if (algorithmChoice == 3 || algorithmChoice == 4) {
-            prompt.append(", Priority");
-        }
+        StringBuilder prompt = new StringBuilder("Enter Process ID, Burst Time, Arrival Time, Priority");
+
         if (algorithmChoice == 4) {
             prompt.append(", Quantum");
         }
@@ -31,11 +29,9 @@ public class InputHandler {
             int burstTime = Integer.parseInt(parts[1]);
             int arrivalTime = Integer.parseInt(parts[2]);
 
-            //  optional fields
-            Integer priority = (algorithmChoice == 3 || algorithmChoice == 4) && parts.length > 3
-                    ? Integer.parseInt(parts[3])
-                    : null;
+            int priority =  Integer.parseInt(parts[3]);
 
+            //  optional fields
             Integer quantum = (algorithmChoice == 4 && parts.length > 4)
                     ? Integer.parseInt(parts[4])
                     : null;
