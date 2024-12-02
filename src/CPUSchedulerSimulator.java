@@ -1,3 +1,5 @@
+import models.Process;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,7 +27,7 @@ public class CPUSchedulerSimulator {
         for (Process p : processes) {
             System.out.println(p);
         }
-//        SchedulerManager.runScheduler(choice, processes);
+        SchedulerManager.runScheduler(choice, processes);
 
     }
 }

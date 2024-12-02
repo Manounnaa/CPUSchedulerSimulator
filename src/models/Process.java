@@ -1,5 +1,9 @@
+package models;
+
+import java.util.List;
+
 public class Process {
-    private String id;          // Process ID
+    private String id;          // models.Process ID
     private int burstTime;      // Burst Time
     private int arrivalTime;    // Arrival Time
     private int priority;   // Priority
@@ -8,6 +12,9 @@ public class Process {
     private int waitingTime;    // Time the process waits before execution
     private int turnaroundTime; // Total time from arrival to completion
 
+    public Process(String id, int burstTime, int arrivalTime, int priority) {
+        this(id, burstTime, arrivalTime, priority, null);
+    }
     // Constructor
     public Process(String id, int burstTime, int arrivalTime, int priority, Integer quantum) {
         this.id = id;
@@ -75,10 +82,13 @@ public class Process {
     public void setTurnaroundTime(int turnaroundTime) {
         this.turnaroundTime = turnaroundTime;
     }
+    public void incrementPriority() {
+        this.priority++;
+    }
 
     @Override
     public String toString() {
-        return "Process{" +
+        return "models.Process{" +
                 "id='" + id + '\'' +
                 ", burstTime=" + burstTime +
                 ", arrivalTime=" + arrivalTime +
