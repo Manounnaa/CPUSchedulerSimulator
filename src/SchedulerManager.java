@@ -3,6 +3,7 @@ import java.util.List;
 //import schedulers.FCAIScheduler;
 //import schedulers.PriorityScheduler;
 import schedulers.FCAI_Scheduling;
+import schedulers.PriorityScheduler;
 import schedulers.SJFScheduler;
 //import schedulers.SRTFScheduler;
 import schedulers.Scheduler;
@@ -27,7 +28,7 @@ public class SchedulerManager {
             case 2:
               //  return new SRTFScheduler(processes);
             case 3:
-           //     return new PriorityScheduler(processes);
+              return new PriorityScheduler(processes);
             case 4:
                 return new FCAI_Scheduling(processes);
             default:
