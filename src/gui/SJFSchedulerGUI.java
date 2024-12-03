@@ -1,4 +1,4 @@
-package gui;
+/*package gui;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -81,3 +81,4 @@ public class SJFSchedulerGUI extends Application {
         launch(args);
     }
 }
+*/

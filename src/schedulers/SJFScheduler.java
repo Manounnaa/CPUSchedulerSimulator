@@ -3,8 +3,10 @@ package schedulers;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+/*
 import javafx.scene.control.TextArea; // Correct import
-
+*/
+import javafx.scene.control.TextArea;
 import models.Process;
 
 public class SJFScheduler extends Scheduler {
@@ -71,72 +73,77 @@ public class SJFScheduler extends Scheduler {
 
     @Override
     public void GUIschedule(TextArea resultArea) {
-        List<Process> completedProcesses = new ArrayList<>();
-        int currentTime = 0;
 
-        resultArea.appendText("Processes execution order:\n");
-
-        while (!processes.isEmpty()) {
-            List<Process> availableProcesses = new ArrayList<>();
-            for (Process p : processes) {
-                if (p.getArrivalTime() <= currentTime) {
-                    availableProcesses.add(p);
-                }
-            }
-            for (Process p : availableProcesses) {
-                int waitingTime = currentTime - p.getArrivalTime();
-                if (waitingTime > PRIORITY_INCREMENT_INTERVAL) {
-                    p.incrementPriority();
-                }
-            }
-
-            availableProcesses.sort(
-                    Comparator.comparingInt(Process::getPriority).reversed()
-                            .thenComparingInt(Process::getBurstTime)
-            );
-
-            if (!availableProcesses.isEmpty()) {
-                Process currentProcess = availableProcesses.get(0);
-                processes.remove(currentProcess);
-
-                resultArea.appendText("-> " + currentProcess.getId() + "\n");
-
-                currentProcess.setWaitingTime(currentTime - currentProcess.getArrivalTime());
-                currentTime += currentProcess.getBurstTime();
-                currentProcess.setTurnaroundTime(currentTime - currentProcess.getArrivalTime());
-
-                completedProcesses.add(currentProcess);
-            } else {
-                currentTime++;
-            }
-        }
-
-        // Output process details
-        resultArea.appendText("\nProcess Details:\n");
-        for (Process p : completedProcesses) {
-            resultArea.appendText(p.getId() + ": Waiting Time = " + p.getWaitingTime() +
-                    ", Turnaround Time = " + p.getTurnaroundTime() + "\n");
-        }
-
-        // Output average times
-        CalcAvg(completedProcesses, resultArea);
     }
 
-    private void CalcAvg(List<Process> completedProcesses, TextArea resultArea) {
-        int totalWaitingTime = 0;
-        int totalTurnaroundTime = 0;
-
-        for (Process p : completedProcesses) {
-            totalWaitingTime += p.getWaitingTime();
-            totalTurnaroundTime += p.getTurnaroundTime();
-        }
-
-        double avgWaitingTime = (double) totalWaitingTime / completedProcesses.size();
-        double avgTurnaroundTime = (double) totalTurnaroundTime / completedProcesses.size();
-
-        resultArea.appendText("\nAverage Waiting Time: " + avgWaitingTime + "\n");
-        resultArea.appendText("Average Turnaround Time: " + avgTurnaroundTime + "\n");
-    }
-
+//    @Override
+//    public void GUIschedule(TextArea resultArea) {
+//        List<Process> completedProcesses = new ArrayList<>();
+//        int currentTime = 0;
+//
+//        resultArea.appendText("Processes execution order:\n");
+//
+//        while (!processes.isEmpty()) {
+//            List<Process> availableProcesses = new ArrayList<>();
+//            for (Process p : processes) {
+//                if (p.getArrivalTime() <= currentTime) {
+//                    availableProcesses.add(p);
+//                }
+//            }
+//            for (Process p : availableProcesses) {
+//                int waitingTime = currentTime - p.getArrivalTime();
+//                if (waitingTime > PRIORITY_INCREMENT_INTERVAL) {
+//                    p.incrementPriority();
+//                }
+//            }
+//
+//            availableProcesses.sort(
+//                    Comparator.comparingInt(Process::getPriority).reversed()
+//                            .thenComparingInt(Process::getBurstTime)
+//            );
+//
+//            if (!availableProcesses.isEmpty()) {
+//                Process currentProcess = availableProcesses.get(0);
+//                processes.remove(currentProcess);
+//
+//                resultArea.appendText("-> " + currentProcess.getId() + "\n");
+//
+//                currentProcess.setWaitingTime(currentTime - currentProcess.getArrivalTime());
+//                currentTime += currentProcess.getBurstTime();
+//                currentProcess.setTurnaroundTime(currentTime - currentProcess.getArrivalTime());
+//
+//                completedProcesses.add(currentProcess);
+//            } else {
+//                currentTime++;
+//            }
+//        }
+//
+//        // Output process details
+//        resultArea.appendText("\nProcess Details:\n");
+//        for (Process p : completedProcesses) {
+//            resultArea.appendText(p.getId() + ": Waiting Time = " + p.getWaitingTime() +
+//                    ", Turnaround Time = " + p.getTurnaroundTime() + "\n");
+//        }
+//
+//        // Output average times
+//        CalcAvg(completedProcesses, resultArea);
+//    }
+//
+//    private void CalcAvg(List<Process> completedProcesses, TextArea resultArea) {
+//        int totalWaitingTime = 0;
+//        int totalTurnaroundTime = 0;
+//
+//        for (Process p : completedProcesses) {
+//            totalWaitingTime += p.getWaitingTime();
+//            totalTurnaroundTime += p.getTurnaroundTime();
+//        }
+//
+//        double avgWaitingTime = (double) totalWaitingTime / completedProcesses.size();
+//        double avgTurnaroundTime = (double) totalTurnaroundTime / completedProcesses.size();
+//
+//        resultArea.appendText("\nAverage Waiting Time: " + avgWaitingTime + "\n");
+//        resultArea.appendText("Average Turnaround Time: " + avgTurnaroundTime + "\n");
+//    }
+//
 
 }
