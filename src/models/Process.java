@@ -7,7 +7,20 @@ public class Process {
     private int burstTime;      // Burst Time
     private int arrivalTime;    // Arrival Time
     private int priority;   // Priority
-    private Integer quantum;    // Quantum (optional) 4
+    private int quantum;    // Quantum (optional) 4
+    private int remainingTime;      // Burst Time
+
+    public void setQuantum(int quantum) {
+        this.quantum = quantum;
+    }
+
+    public int getRemainingTime() {
+        return remainingTime;
+    }
+
+    public void setRemainingTime(int remainingTime) {
+        this.remainingTime = remainingTime;
+    }
 
     private int waitingTime;    // Time the process waits before execution
     private int turnaroundTime; // Total time from arrival to completion
@@ -59,11 +72,11 @@ public class Process {
         this.priority = priority;
     }
 
-    public Integer getQuantum() {
+    public int getQuantum() {
         return quantum;
     }
 
-    public void setQuantum(Integer quantum) {
+    public void setQuantum(int quantum) {
         this.quantum = quantum;
     }
 
@@ -93,7 +106,7 @@ public class Process {
                 ", burstTime=" + burstTime +
                 ", arrivalTime=" + arrivalTime +
                 ", priority=" + (priority ) +
-                ", quantum=" + (quantum != null ? quantum : "N/A") +
+                ", quantum=" + (quantum != 0 ? quantum : "N/A") +
                 '}';
     }
 }
