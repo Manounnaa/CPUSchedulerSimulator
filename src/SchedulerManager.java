@@ -1,18 +1,13 @@
 import java.util.List;
 
-//import schedulers.FCAIScheduler;
-//import schedulers.PriorityScheduler;
-import schedulers.FCAI_Scheduling;
-import schedulers.PriorityScheduler;
-import schedulers.SJFScheduler;
-//import schedulers.SRTFScheduler;
-import schedulers.Scheduler;
+import schedulers.*;
+
 import models.Process;
 
 public class SchedulerManager {
 
-    public static void runScheduler(int choice, List<Process> processes) {
-        Scheduler scheduler = createScheduler(choice, processes);
+    public static void runScheduler(int choice, List<Process> processes, int contextSwitching) {
+        Scheduler scheduler = createScheduler(choice, processes, contextSwitching);
         if (scheduler == null) {
             System.out.println("Invalid scheduler choice.");
             return;
@@ -21,12 +16,12 @@ public class SchedulerManager {
         scheduler.schedule();
     }
 
-    private static Scheduler createScheduler(int choice, List<Process> processes) {
+    private static Scheduler createScheduler(int choice, List<Process> processes, int contextSwitching) {
         switch (choice) {
             case 1:
                 return new SJFScheduler(processes);
             case 2:
-              //  return new SRTFScheduler(processes);
+                return new SRTFScheduler(processes, contextSwitching);
             case 3:
               return new PriorityScheduler(processes);
             case 4:

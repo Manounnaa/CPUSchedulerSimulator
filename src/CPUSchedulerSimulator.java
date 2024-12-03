@@ -23,11 +23,15 @@ public class CPUSchedulerSimulator {
 
         List<Process> processes = InputHandler.getProcesses(choice);
 
+        int contextSwitching = 0;
+        if (choice == 2 ) {
+            contextSwitching = InputHandler.getContextSwitching();
+        }
         System.out.println("Processes:");
         for (Process p : processes) {
             System.out.println(p);
         }
-        SchedulerManager.runScheduler(choice, processes);
+        SchedulerManager.runScheduler(choice, processes, contextSwitching);
 
     }
 }

@@ -44,4 +44,9 @@ public class InputHandler {
 
         return processes;
     }
+    public static int getContextSwitching() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the context switching time: ");
+        return scanner.nextInt();
+    }
 }
