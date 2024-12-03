@@ -1,6 +1,6 @@
 package schedulers;
-
-import java.awt.*;
+/*
+import java.awt.*;*/
 import java.util.List;
 
 import models.Process;
@@ -25,5 +25,4 @@ public abstract  class Scheduler {
     public abstract void schedule();
 
 
-    public abstract void GUIschedule(javafx.scene.control.TextArea resultArea);
 }

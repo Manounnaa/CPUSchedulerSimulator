@@ -5,8 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 /*
 import javafx.scene.control.TextArea; // Correct import
-*/
-import javafx.scene.control.TextArea;
+
+import javafx.scene.control.TextArea;*/
 import models.Process;
 
 public class SJFScheduler extends Scheduler {
@@ -71,10 +71,7 @@ public class SJFScheduler extends Scheduler {
 
     }
 
-    @Override
-    public void GUIschedule(TextArea resultArea) {
 
-    }
 
 //    @Override
 //    public void GUIschedule(TextArea resultArea) {

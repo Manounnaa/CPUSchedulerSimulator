@@ -34,9 +34,9 @@ public class InputHandler {
             int priority =  Integer.parseInt(parts[3]);
 
             //  optional fields
-            Integer quantum = (algorithmChoice == 4 && parts.length > 4)
+            int quantum = (algorithmChoice == 4 && parts.length > 4)
                     ? Integer.parseInt(parts[4])
-                    : null;
+                    : 0;
 
             // Add process to the list
             processes.add(new Process(processID, burstTime, arrivalTime, priority, quantum));

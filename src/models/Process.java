@@ -10,9 +10,6 @@ public class Process {
     private int quantum;    // Quantum (optional) 4
     private int remainingTime;      // Burst Time
 
-    public void setQuantum(int quantum) {
-        this.quantum = quantum;
-    }
 
     public int getRemainingTime() {
         return remainingTime;
@@ -79,11 +76,11 @@ public class Process {
         this.priority = priority;
     }
 
-    public Integer getQuantum() {
+    public int getQuantum() {
         return quantum;
     }
 
-    public void setQuantum(Integer quantum) {
+    public void setQuantum(int quantum) {
         this.quantum = quantum;
     }
 
@@ -108,7 +105,7 @@ public class Process {
 
     @Override
     public String toString() {
-        return "models.Process{" +
+        return "Process{" +
                 "id='" + id + '\'' +
                 ", burstTime=" + burstTime +
                 ", arrivalTime=" + arrivalTime +
