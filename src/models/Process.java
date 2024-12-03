@@ -25,8 +25,15 @@ public class Process {
     private int waitingTime;    // Time the process waits before execution
     private int turnaroundTime; // Total time from arrival to completion
 
-    public Process(String id, int burstTime, int arrivalTime, int priority) {
-        this(id, burstTime, arrivalTime, priority, null);
+    public Process(String id, int burstTime, int arrivalTime, int priority , int quantum) {
+        this.id = id;
+        this.burstTime = burstTime;
+        this.remainingTime = burstTime;
+        this.arrivalTime = arrivalTime;
+        this.priority = priority;
+        this.quantum = quantum;
+        this.waitingTime = 0;
+        this.turnaroundTime = 0;
     }
     // Constructor
     public Process(String id, int burstTime, int arrivalTime, int priority, Integer quantum) {
@@ -72,11 +79,11 @@ public class Process {
         this.priority = priority;
     }
 
-    public int getQuantum() {
+    public Integer getQuantum() {
         return quantum;
     }
 
-    public void setQuantum(int quantum) {
+    public void setQuantum(Integer quantum) {
         this.quantum = quantum;
     }
 
