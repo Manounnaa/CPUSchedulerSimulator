@@ -23,7 +23,7 @@ public class SchedulerManager {
             case 2:
                 return new SRTFScheduler(processes, contextSwitching);
             case 3:
-              return new PriorityScheduler(processes);
+              return new PriorityScheduler(processes, contextSwitching);
             case 4:
                 return new FCAI_Scheduling(processes);
             default:

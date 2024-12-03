@@ -1,15 +1,21 @@
 package schedulers;
+
+import models.Process;
+
 import java.util.List;
 import java.util.PriorityQueue;
-import models.Process;
-public class PriorityScheduler extends Scheduler {
 
-    public PriorityScheduler(List<Process> processes) {
+public class PriorityScheduler extends Scheduler {
+    private int contextSwitchTime;
+
+    public PriorityScheduler(List<Process> processes, int contextSwitchTime) {
         super(processes);
+        this.contextSwitchTime = contextSwitchTime;
     }
 
     @Override
     public void schedule() {
+        // Create a priority queue based on priority first, and if the priority is the same, arrival time is used
         PriorityQueue<Process> processQueue = new PriorityQueue<>(
                 (p1, p2) -> {
                     if (p1.getPriority() != p2.getPriority()) {
@@ -21,32 +27,39 @@ public class PriorityScheduler extends Scheduler {
 
         processQueue.addAll(processes);
 
-        int currentTime = 0;
+        int currentTime = 0;  // The time tracker
         System.out.println("\nExecution Order:");
 
-        // iterate over p in priority order
+        // Process the processes in priority order
         while (!processQueue.isEmpty()) {
-            Process current = processQueue.poll(); // get p with  highest priority
-            // if p arrives after current time, we need to update current time to its arrival time
+            Process current = processQueue.poll();  // Process with highest priority
+
+            // If the current process arrives after the current time, update current time
             if (current.getArrivalTime() > currentTime) {
-                currentTime = current.getArrivalTime(); // p can't start before its arrival
+                currentTime = current.getArrivalTime();
             }
-            // calculate waiting time: how long p waited before starting execution
-            current.setWaitingTime(currentTime - current.getArrivalTime());
-            // update current time by adding burst time of the current p
-            currentTime += current.getBurstTime();
-            // calculate turnaround time: total time from arrival to completion
-            current.setTurnaroundTime(current.getWaitingTime() + current.getBurstTime());
-            // show process id in order it is executed
-            System.out.println(current.getId());
+
+            // Calculate Waiting Time
+            int waitingTime = currentTime - current.getArrivalTime();
+            current.setWaitingTime(waitingTime); // Waiting Time = Start Time - Arrival Time
+
+            // Calculate Completion Time
+            int completionTime = currentTime + current.getBurstTime();
+            current.setTurnaroundTime(completionTime - current.getArrivalTime()); // Turnaround Time = Completion Time - Arrival Time
+
+            // Update current time
+            currentTime = completionTime;
+
+            // Output the process and its completion time
+            System.out.println("Process ID: " + current.getId() + " | Completion Time: " + completionTime);
+
+            // Add context switch time if there are more processes in the queue
+            if (!processQueue.isEmpty()) {
+                currentTime += contextSwitchTime;
+            }
         }
-        // after scheduling, calculate and display the average waiting time and turnaround time
+
+        // After scheduling, calculate and display the average waiting time and turnaround time
         CalcAvg(processes);
     }
-
-//    @Override
-//    public void GUIschedule() {
-//        System.out.println("GUI scheduling not implemented yet.");
-//    }
 }
-

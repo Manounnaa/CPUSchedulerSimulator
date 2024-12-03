@@ -24,7 +24,7 @@ public class CPUSchedulerSimulator {
         List<Process> processes = InputHandler.getProcesses(choice);
 
         int contextSwitching = 0;
-        if (choice == 2 ) {
+        if (choice == 2 || choice==3) {
             contextSwitching = InputHandler.getContextSwitching();
         }
         System.out.println("Processes:");
