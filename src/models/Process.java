@@ -9,6 +9,7 @@ public class Process {
     private int priority;   // Priority
     private int quantum;    // Quantum (optional) 4
     private int remainingTime;      // Burst Time
+    private int age;  // New field for aging
 
 
     public int getRemainingTime() {
@@ -31,6 +32,7 @@ public class Process {
         this.quantum = quantum;
         this.waitingTime = 0;
         this.turnaroundTime = 0;
+        this.age = 0;  // Initial age is 0
     }
     // Constructor
     public Process(String id, int burstTime, int arrivalTime, int priority, Integer quantum) {
@@ -101,6 +103,27 @@ public class Process {
     }
     public void incrementPriority() {
         this.priority++;
+    }
+    public int getAge() {
+        return age;
+    }
+
+    // Increment the age of the process
+    public void incrementAge() {
+        this.age++;
+    }
+
+    // Reset the age (if necessary)
+    public void resetAge() {
+        this.age = 0;
+    }
+
+    // Increase the priority based on the age (this is where you can define the logic for aging)
+    public void increasePriority() {
+        if (this.age > 10) { // Example threshold for aging (process waits for too long)
+            this.priority += 1;  // Increase priority
+            this.age = 0;        // Reset age after priority increase
+        }
     }
 
     @Override
