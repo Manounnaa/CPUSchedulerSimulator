@@ -3,8 +3,6 @@ import models.Process;
 import java.util.List;
 import java.util.Queue;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Comparator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.FileWriter;
@@ -13,17 +11,13 @@ import java.io.*;
 
 public class FCAI_Scheduling extends Scheduler {
     private Queue<Process> readyQueue;
-    private Queue<Process> ProcessQueue;
     private double V1, V2;
     private int currentTime;
+    private int contextSwitchTime;
     private List<Process> finishedQueue;
 
     public FCAI_Scheduling(List<Process> processes) {
         super(processes);
-        this.ProcessQueue = new PriorityQueue<>(
-                Comparator.comparingInt(Process::getArrivalTime)
-                        .thenComparingInt(this::calculateFCAIFactor)
-        );
         this.readyQueue = new LinkedList<>();
         this.V1 = processes.stream().mapToInt(Process::getArrivalTime).max().getAsInt() / 10.0;
         this.V2 = processes.stream().mapToInt(Process::getBurstTime).max().getAsInt() / 10.0;

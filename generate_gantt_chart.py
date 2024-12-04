@@ -51,7 +51,7 @@ def generate_gantt_chart(timeline_data):
 
 if __name__ == '__main__':
     # Define the path to the JSON file (no user input required)
-    file_path = r"C:\Users\Ahmed\IdeaProjects\CPUSchedulerSimulator3\result.json"
+    file_path = r"result.json"
     print(f"Looking for file at: {file_path}")
 
     try:

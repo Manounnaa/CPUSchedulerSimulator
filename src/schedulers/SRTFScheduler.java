@@ -2,14 +2,22 @@ package schedulers;
 import models.Process;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.*;
 
 public class SRTFScheduler extends Scheduler {
     private final int contextSwitching;
     private static final int AGE_THRESHOLD = 10; // Threshold to age processes
+    private List<JSONObject> timeline; // To store the timeline of process executions
 
     public SRTFScheduler(List<Process> processes, int contextSwitching) {
         super(processes);
         this.contextSwitching = contextSwitching;
+        this.timeline = new ArrayList<>();
+
     }
 
     public void schedule() {
@@ -55,6 +63,13 @@ public class SRTFScheduler extends Scheduler {
                 burstTime -= executionTime;
                 remainingTime.put(currentProcess, burstTime);
 
+
+                JSONObject processTimeline = new JSONObject()
+                        .put("process", currentProcess.getId())
+                        .put("start_time", currentTime)
+                        .put("duration", executionTime);
+
+                timeline.add(processTimeline);
                 // Handle aging to prevent starvation
                 for (Process process : readyQueue) {
                     if (process != currentProcess) {
@@ -81,6 +96,52 @@ public class SRTFScheduler extends Scheduler {
         }
 
         printResults(completedProcesses);
+        double[] averages  = CalcAvg(completedProcesses);
+        double avgWaitingTime = averages[0];
+        double avgTurnaroundTime = averages[1];
+
+        JSONObject result = new JSONObject();
+        result.put("timeline", timeline);
+        result.put("avg_waiting_time", avgWaitingTime);
+        result.put("avg_turnaround_time", avgTurnaroundTime);
+        // Write JSON to file
+        try (FileWriter file = new FileWriter("result.json")) {
+            file.write(result.toString());
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+
+            Runtime rt = Runtime.getRuntime();
+            String command = "python generate_gantt_chart.py";
+            java.lang.Process pr = rt.exec(command);
+
+            // Get the output stream of the process
+            BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            String line;
+
+            // Print the output of the Python script
+            while ((line = input.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            // Wait for the script to finish execution
+            pr.waitFor();
+
+            // Get the error stream of the process (if any)
+            BufferedReader error = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+            while ((line = error.readLine()) != null) {
+                System.err.println(line);
+            }
+
+            System.out.println("Python script executed successfully.");
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private Process getShortestRemainingTimeProcess(Queue<Process> readyQueue, Map<Process, Integer> remainingTime) {
