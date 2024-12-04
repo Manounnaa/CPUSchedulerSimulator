@@ -12,14 +12,23 @@ public abstract  class Scheduler {
         this.processes = processes;
     }
 
-    public void CalcAvg(List<Process> processes) {
+    public double[] CalcAvg(List<Process> processes) {
         double total_wait = 0, total_turnaround = 0;
+
         for (Process p : processes) {
             total_wait += p.getWaitingTime();
             total_turnaround += p.getTurnaroundTime();
         }
-        System.out.printf("Average WT : %.2f%n", total_wait / processes.size());
-        System.out.printf("Average TAT : %.2f%n", total_turnaround / processes.size());
+
+        double avgWaitingTime = total_wait / processes.size();
+        double avgTurnaroundTime = total_turnaround / processes.size();
+
+        // Print the averages
+        System.out.printf("Average WT : %.2f%n", avgWaitingTime);
+        System.out.printf("Average TAT : %.2f%n", avgTurnaroundTime);
+
+        // Return the averages as an array
+        return new double[]{avgWaitingTime, avgTurnaroundTime};
     }
 
     public abstract void schedule();
