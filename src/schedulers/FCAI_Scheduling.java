@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.*;
 
 public class FCAI_Scheduling extends Scheduler {
-    private Queue<Process> readyQueue;
+    private LinkedList<Process> readyQueue;
     private double V1, V2;
     private int currentTime;
     private int contextSwitchTime;
@@ -50,10 +50,11 @@ public class FCAI_Scheduling extends Scheduler {
                 executedTime++;
 
                 addReadyProcesses(currentTime);
-                Process nextProcess = readyQueue.peek();
-                if(currentTime >= 0.4 * current.getQuantum()) {
+                Process nextProcess = getLowestFCAI(readyQueue);
+                if(executedTime >= 0.4 * current.getQuantum()) {
                     if (nextProcess != null && calculateFCAIFactor(nextProcess) < calculateFCAIFactor(current)) {
                         readyQueue.offer(current);
+                        //readyQueue.remove(nextProcess);
                         System.out.println("Time " + currentTime + ": Process " + current.getId() +
                                 " preempted by Process " + nextProcess.getId());
                         preempted = true;
@@ -69,9 +70,13 @@ public class FCAI_Scheduling extends Scheduler {
                 if(preempted){
                     int unusedQuantum = quantum - executedTime;
                     current.setQuantum(current.getQuantum() + unusedQuantum);
+                    Process nextProcess = getLowestFCAI(readyQueue);
+                    readyQueue.remove(nextProcess);
                     if (!readyQueue.contains(current)) {
                         readyQueue.offer(current);
                     }
+                    readyQueue.addFirst(nextProcess);
+
                     //readyQueue.offer(current);
                     System.out.println("Time " + currentTime + ": Process " + current.getId() +
                             " returned to queue. Remaining time: " + current.getRemainingTime() +
@@ -167,5 +172,25 @@ public class FCAI_Scheduling extends Scheduler {
             }
         }
     }
+    private Process getLowestFCAI(Queue<Process> readyQueue) {
+        if (readyQueue.isEmpty()) {
+            return null; // No process to select
+        }
+
+        Process lowestFCAIProcess = null;
+        int lowestFCAIFactor = Integer.MAX_VALUE;
+
+        for (Process process : readyQueue) {
+            int fcaiFactor = calculateFCAIFactor(process);
+            if (fcaiFactor < lowestFCAIFactor) {
+                lowestFCAIFactor = fcaiFactor;
+                lowestFCAIProcess = process;
+            }
+        }
+
+        return lowestFCAIProcess;
+    }
+
+
 
 }
