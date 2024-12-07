@@ -61,7 +61,8 @@ public class PriorityScheduler extends Scheduler {
             timeline.put(new JSONObject()
                     .put("process", current.getId())
                     .put("start_time", startTime)
-                    .put("duration", executedTime));
+                    .put("duration", executedTime)
+                    .put("color", current.getColor()));  // Add color to the JSON
 
             // Update current time
             currentTime = completionTime;

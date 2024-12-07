@@ -65,7 +65,9 @@ public class FCAI_Scheduling extends Scheduler {
             timeline.put(new JSONObject()
                     .put("process", current.getId())
                     .put("start_time", startTime)
-                    .put("duration", executedTime));
+                    .put("duration", executedTime)
+                    .put("color", current.getColor()));
+
             if (current.getRemainingTime() > 0) {
                 if(preempted){
                     int unusedQuantum = quantum - executedTime;

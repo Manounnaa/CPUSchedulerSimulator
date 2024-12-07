@@ -16,7 +16,6 @@ def generate_gantt_chart(timeline_data):
         print(f"Key error: The key {e} is missing in the JSON data.")
         return
 
-    process_colors = {}
     fig, ax = plt.subplots(figsize=(10, 6))
 
     # Prepare for plotting
@@ -27,9 +26,8 @@ def generate_gantt_chart(timeline_data):
 
     for i, event in enumerate(timeline):
         process = event['process']
-        if process not in process_colors:
-            process_colors[process] = (random.random(), random.random(), random.random())  # Random colors for each process
-        ax.barh(y_positions[i], durations[i], left=start_times[i], color=process_colors[process], edgecolor='black')
+        color = event['color']  # Access the color directly from the event in the timeline data
+        ax.barh(y_positions[i], durations[i], left=start_times[i], color=color, edgecolor='black')
 
     # Add process labels
     for i, event in enumerate(timeline):

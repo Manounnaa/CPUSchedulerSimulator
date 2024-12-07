@@ -67,7 +67,9 @@ public class SRTFScheduler extends Scheduler {
                 JSONObject processTimeline = new JSONObject()
                         .put("process", currentProcess.getId())
                         .put("start_time", currentTime)
-                        .put("duration", executionTime);
+                        .put("duration", executionTime)
+                        .put("color", currentProcess.getColor());
+
 
                 timeline.add(processTimeline);
                 // Handle aging to prevent starvation

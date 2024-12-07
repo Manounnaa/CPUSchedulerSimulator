@@ -10,6 +10,8 @@ public class Process {
     private int quantum;    // Quantum (optional) 4
     private int remainingTime;      // Burst Time
     private int age;  // New field for aging
+    private String color;       // Color for Gantt chart
+
 
 
     public int getRemainingTime() {
@@ -33,6 +35,7 @@ public class Process {
         this.waitingTime = 0;
         this.turnaroundTime = 0;
         this.age = 0;  // Initial age is 0
+        this.color = "gray";
     }
     // Constructor
     public Process(String id, int burstTime, int arrivalTime, int priority, Integer quantum) {
@@ -44,6 +47,19 @@ public class Process {
         this.waitingTime = 0;
         this.turnaroundTime = 0;
     }
+    public Process(String id, int burstTime, int arrivalTime, int priority, int quantum, String color) {
+        this.id = id;
+        this.burstTime = burstTime;
+        this.remainingTime = burstTime;
+        this.arrivalTime = arrivalTime;
+        this.priority = priority;
+        this.quantum = quantum;
+        this.waitingTime = 0;
+        this.turnaroundTime = 0;
+        this.age = 0;
+        this.color = color;
+    }
+
 
     // Getters and Setters
     public String getId() {
@@ -117,12 +133,22 @@ public class Process {
     public void resetAge() {
         this.age = 0;
     }
+    public String getColor() {
+        return color;
+    }
+
+
 
     // Increase the priority based on the age (this is where you can define the logic for aging)
     public void increasePriority() {
         if (this.age > 10) { // Example threshold for aging (process waits for too long)
             this.priority += 1;  // Increase priority
             this.age = 0;        // Reset age after priority increase
+        }
+    }
+    public void decreasePriority() {
+        if (this.priority > 0) {
+            this.priority--; // Decrease priority to prevent starvation
         }
     }
 
@@ -134,6 +160,7 @@ public class Process {
                 ", arrivalTime=" + arrivalTime +
                 ", priority=" + (priority ) +
                 ", quantum=" + (quantum != 0 ? quantum : "N/A") +
+                ", color='" + color + '\'' +
                 '}';
     }
 }
