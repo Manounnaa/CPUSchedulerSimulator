@@ -1,4 +1,5 @@
 package schedulers;
+
 import models.Process;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -17,19 +18,12 @@ public class SRTFScheduler extends Scheduler {
         super(processes);
         this.contextSwitching = contextSwitching;
         this.timeline = new ArrayList<>();
-
     }
 
     public void schedule() {
         int currentTime = 0;
         Queue<Process> readyQueue = new LinkedBlockingQueue<>();
         List<Process> completedProcesses = new ArrayList<>();
-        Map<Process, Integer> remainingTime = new HashMap<>();
-
-        // Initialize remaining time for each process
-        for (Process process : processes) {
-            remainingTime.put(process, process.getBurstTime());
-        }
 
         // Sort processes by arrival time
         processes.sort(Comparator.comparingInt(Process::getArrivalTime));
@@ -44,7 +38,7 @@ public class SRTFScheduler extends Scheduler {
                 }
             }
 
-            Process currentProcess = getShortestRemainingTimeProcess(readyQueue, remainingTime);
+            Process currentProcess = getShortestRemainingTimeProcess(readyQueue);
 
             // Handle process execution
             if (currentProcess != null) {
@@ -56,28 +50,25 @@ public class SRTFScheduler extends Scheduler {
                 }
 
                 // Execute process for 1 time unit or until completion
-                int burstTime = remainingTime.get(currentProcess);
+                int burstTime = currentProcess.getRemainingTime();
                 int executionTime = Math.min(1, burstTime); // 1 time unit execution
-                executionTime = (int) Math.ceil(executionTime);
                 currentTime += executionTime;
-                burstTime -= executionTime;
-                remainingTime.put(currentProcess, burstTime);
-
+                currentProcess.setRemainingTime(burstTime - executionTime);
 
                 JSONObject processTimeline = new JSONObject()
                         .put("process", currentProcess.getId())
-                        .put("start_time", currentTime)
+                        .put("start_time", currentTime - executionTime)
                         .put("duration", executionTime)
                         .put("color", currentProcess.getColor());
 
-
                 timeline.add(processTimeline);
+
                 // Handle aging to prevent starvation
                 for (Process process : readyQueue) {
                     if (process != currentProcess) {
                         process.incrementAge();
                         if (process.getAge() >= AGE_THRESHOLD) {
-                            process.increasePriority(); // Increase priority after aging
+                            process.decreasePriority(); // Increase priority after aging
                         }
                     }
                 }
@@ -86,19 +77,16 @@ public class SRTFScheduler extends Scheduler {
                     completedProcesses.add(currentProcess);
                     currentProcess.setTurnaroundTime(currentTime - currentProcess.getArrivalTime());
                     currentProcess.setWaitingTime(currentProcess.getTurnaroundTime() - currentProcess.getBurstTime());
-                } else {
-                    readyQueue.add(currentProcess); // Re-add process if not completed
                 }
 
                 lastExecutedProcess = currentProcess;
             } else {
-                // Increment time if no process is ready
                 currentTime++;
             }
         }
 
         printResults(completedProcesses);
-        double[] averages  = CalcAvg(completedProcesses);
+        double[] averages = CalcAvg(completedProcesses);
         double avgWaitingTime = averages[0];
         double avgTurnaroundTime = averages[1];
 
@@ -106,6 +94,7 @@ public class SRTFScheduler extends Scheduler {
         result.put("timeline", timeline);
         result.put("avg_waiting_time", avgWaitingTime);
         result.put("avg_turnaround_time", avgTurnaroundTime);
+
         // Write JSON to file
         try (FileWriter file = new FileWriter("result.json")) {
             file.write(result.toString());
@@ -115,46 +104,47 @@ public class SRTFScheduler extends Scheduler {
         }
 
         try {
-
             Runtime rt = Runtime.getRuntime();
             String command = "python generate_gantt_chart.py";
             java.lang.Process pr = rt.exec(command);
 
-            // Get the output stream of the process
             BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
             String line;
 
-            // Print the output of the Python script
             while ((line = input.readLine()) != null) {
                 System.out.println(line);
             }
 
-            // Wait for the script to finish execution
             pr.waitFor();
 
-            // Get the error stream of the process (if any)
             BufferedReader error = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
             while ((line = error.readLine()) != null) {
                 System.err.println(line);
             }
 
             System.out.println("Python script executed successfully.");
-
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
-    private Process getShortestRemainingTimeProcess(Queue<Process> readyQueue, Map<Process, Integer> remainingTime) {
+    private Process getShortestRemainingTimeProcess(Queue<Process> readyQueue) {
         Process shortestRemainingProcess = null;
         int shortestTime = Integer.MAX_VALUE;
-        for (Process process : readyQueue) {
-            int remaining = remainingTime.get(process);
-            if (remaining < shortestTime) {
-                shortestTime = remaining;
-                shortestRemainingProcess = process;
+
+        // Sort by priority first and then by remaining time
+        List<Process> sortedReadyQueue = new ArrayList<>(readyQueue);
+        sortedReadyQueue.sort((p1, p2) -> {
+            if (p1.getRemainingTime() != p2.getRemainingTime()) {
+                return Integer.compare(p1.getRemainingTime(), p2.getRemainingTime());
             }
+            return Integer.compare(p1.getPriority(), p2.getPriority());
+
+        });
+
+        // Pick the first process from the sorted list (priority first, then remaining time)
+        if (!sortedReadyQueue.isEmpty()) {
+            shortestRemainingProcess = sortedReadyQueue.get(0);
         }
         return shortestRemainingProcess;
     }
@@ -176,11 +166,3 @@ public class SRTFScheduler extends Scheduler {
         System.out.printf("Average Turnaround Time: %.2f\n", (double) totalTurnaroundTime / completedProcesses.size());
     }
 }
-
-
-
-
-
-
-
-

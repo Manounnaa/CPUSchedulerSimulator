@@ -49,13 +49,13 @@ public class SJFScheduler extends Scheduler {
                 int waitingTime = currentTime - p.getArrivalTime();
                 if (waitingTime > STARVATION_THRESHOLD) {
                     p.decreasePriority();  // Decrease priority if waiting for too long
-                    System.out.println("Starvation detected, decreasing priority of Process " + p.getId());
                 }
             }
 
             availableProcesses.sort(
-                    Comparator.comparingInt(Process::getPriority) // piriority first
-                            .thenComparingInt(Process::getBurstTime) // excution time
+                    Comparator.comparingInt(
+                            Process::getBurstTime) //  excution first
+                            .thenComparingInt(Process::getPriority) //piriority  time
             );
             if (!availableProcesses.isEmpty()) {
                 Process currentProcess = availableProcesses.get(0);

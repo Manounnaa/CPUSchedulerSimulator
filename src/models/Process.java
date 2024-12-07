@@ -149,6 +149,8 @@ public class Process {
     public void decreasePriority() {
         if (this.priority > 0) {
             this.priority--; // Decrease priority to prevent starvation
+            System.out.println("Starvation detected, decreasing priority of Process " + this.getId());
+
         }
     }
 
