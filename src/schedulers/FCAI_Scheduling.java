@@ -44,6 +44,8 @@ public class FCAI_Scheduling extends Scheduler {
             Boolean preempted = false;
             System.out.println("Time " + currentTime + ": Process " + current.getId() + " starts executing (Quantum: " + quantum + ") with FCAI Factor " + calculateFCAIFactor(current));
             int startTime = currentTime;
+            int FCAI_factor = calculateFCAIFactor(current);
+
             while (current.getRemainingTime() > 0 && executedTime < quantum) {
                 currentTime++;
                 current.setRemainingTime(current.getRemainingTime() - 1);
@@ -52,7 +54,7 @@ public class FCAI_Scheduling extends Scheduler {
                 addReadyProcesses(currentTime);
                 Process nextProcess = getLowestFCAI(readyQueue);
                 if(executedTime >= 0.4 * current.getQuantum()) {
-                    if (nextProcess != null && calculateFCAIFactor(nextProcess) < calculateFCAIFactor(current)) {
+                    if (nextProcess != null && calculateFCAIFactor(nextProcess) < FCAI_factor) {
                         readyQueue.offer(current);
                         //readyQueue.remove(nextProcess);
                         System.out.println("Time " + currentTime + ": Process " + current.getId() +
@@ -65,7 +67,9 @@ public class FCAI_Scheduling extends Scheduler {
             timeline.put(new JSONObject()
                     .put("process", current.getId())
                     .put("start_time", startTime)
-                    .put("duration", executedTime));
+                    .put("duration", executedTime)
+                    .put("color", current.getColor()));
+
             if (current.getRemainingTime() > 0) {
                 if(preempted){
                     int unusedQuantum = quantum - executedTime;

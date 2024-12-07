@@ -19,6 +19,8 @@ public class InputHandler {
         if (algorithmChoice == 4) {
             prompt.append(", Quantum");
         }
+        prompt.append(", Color");
+
         prompt.append(" (separated by spaces):");
 
         System.out.println(prompt.toString());
@@ -38,8 +40,9 @@ public class InputHandler {
                     ? Integer.parseInt(parts[4])
                     : 0;
 
-            // Add process to the list
-            processes.add(new Process(processID, burstTime, arrivalTime, priority, quantum));
+            String color = (parts.length > 4 && algorithmChoice == 4) ? parts[parts.length - 1] : parts[4];
+
+            processes.add(new Process(processID, burstTime, arrivalTime, priority, quantum, color));
         }
 
         return processes;
