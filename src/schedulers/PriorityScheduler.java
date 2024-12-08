@@ -39,7 +39,7 @@ public class PriorityScheduler extends Scheduler {
             timeline.put(new JSONObject().put("process", current.getId()).put("start_time", startTime).put("duration", executedTime).put("color", current.getColor()));
             // update current time
             currentTime = completionTime;
-            System.out.println("Process ID: " + current.getId() + " | Completion Time: " + completionTime);// output process and its completion time
+            System.out.println("Process ID: " + current.getId() + " | Completion Time: " + completionTime + " | Start Time: " +startTime );// output process and its completion time
             if (!processQueue.isEmpty()) {   // add context switch time if there are more processes in queue
                 currentTime += contextSwitchTime;}}
         //-----------------------------------------------------------------------------------------------
@@ -56,10 +56,14 @@ public class PriorityScheduler extends Scheduler {
         result.put("timeline", timeline);
         result.put("avg_waiting_time", avgWaitingTime);
         result.put("avg_turnaround_time", avgTurnaroundTime);
+        File f = new File("result.json");
         // Write JSON to file
+        if (f.exists()) {
+            boolean deleted = f.delete();}
         try (FileWriter file = new FileWriter("result.json")) {
             file.write(result.toString());
             file.flush();
+            System.out.println("Results saved to result.json.");
         } catch (IOException e) {
             e.printStackTrace();
         }
