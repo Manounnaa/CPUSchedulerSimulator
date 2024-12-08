@@ -43,6 +43,11 @@ public class PriorityScheduler extends Scheduler {
             if (!processQueue.isEmpty()) {   // add context switch time if there are more processes in queue
                 currentTime += contextSwitchTime;}}
         //-----------------------------------------------------------------------------------------------
+        System.out.println("\nProcess Details:");
+        for (Process p :processes) {
+            System.out.println(p.getId() + ": Waiting Time = " + p.getWaitingTime() +
+                    ", Turnaround Time = " + p.getTurnaroundTime());
+        }
         double[] averages  = CalcAvg(processes);
         double avgWaitingTime = averages[0];
         double avgTurnaroundTime = averages[1];
@@ -51,28 +56,34 @@ public class PriorityScheduler extends Scheduler {
         result.put("timeline", timeline);
         result.put("avg_waiting_time", avgWaitingTime);
         result.put("avg_turnaround_time", avgTurnaroundTime);
-//--------------------------------------------------------------------------------------------
-        // write JSON to file
+        // Write JSON to file
         try (FileWriter file = new FileWriter("result.json")) {
             file.write(result.toString());
             file.flush();
         } catch (IOException e) {
-            e.printStackTrace();}
-        try {Runtime rt = Runtime.getRuntime();
+            e.printStackTrace();
+        }
+        try {
+            Runtime rt = Runtime.getRuntime();
             String command = "python generate_gantt_chart.py";
             java.lang.Process pr = rt.exec(command);
-            // get the output stream of the process
+            // Get the output stream of the process
             BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
             String line;
-            // print output of  Python script
+            // Print the output of the Python script
             while ((line = input.readLine()) != null) {
-                System.out.println(line);}
-            // wait for script to finish execution
+                System.out.println(line);
+            }
+            // Wait for the script to finish execution
             pr.waitFor();
-            // get  error stream of  process (if any)
+            // Get the error stream of the process (if any)
             BufferedReader error = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
             while ((line = error.readLine()) != null) {
-                System.err.println(line);}
+                System.err.println(line);
+            }
             System.out.println("Python script executed successfully.");
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();}}}
+            e.printStackTrace();
+        }
+    }
+}
