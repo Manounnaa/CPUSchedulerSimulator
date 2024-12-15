@@ -1,4 +1,4 @@
-A# CPU Scheduler Simulator
+# CPU Scheduler Simulator
 
 This project is a **CPU Scheduling Simulator** that simulates and visualizes different CPU scheduling algorithms. The implemented algorithms are **Non-preemptive Priority Scheduling**, **Non-preemptive Shortest Job First (SJF)**, **Shortest Remaining Time First (SRTF)**, and a custom **FCAI Scheduling** algorithm. The simulator includes functionality for generating Gantt charts to visualize the scheduling process and handle different scheduling scenarios.
 
